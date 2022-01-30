@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+
+body{
+    background: rgb(112,153,245);
+    background: radial-gradient(circle, rgba(112,153,245,1) 0%, rgba(21,124,166,1) 100%);
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+}
+header{
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 35px;
+    padding: 35px;
+}
+#entrada{
+    width: 80%;
+}
+#entrada input{
+    border-radius: 0 5px 5px 0;
+    font-size: large;
+    
+}
+#submit{
+    margin-left: 10px;
+    border-radius: 5px;
+}
+.lista{
+    background: white;
+    border-radius: 5px;
+    margin-top: 50px;
+    width: 80%!important;
+}
+.item_lista{
+    font-size: 1.2rem;
+}
+.icone_lixeira{
+	color: black;
+}
+.icone_lixeira:hover{
+    color: red;
+}
+
+
+
