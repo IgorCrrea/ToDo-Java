@@ -42,5 +42,13 @@ header{
     color: red;
 }
 
+.icone_lapis{
+	color: black;
+}
+.icone_lapis:hover{
+    color: blue;
+}
+
+
 
 

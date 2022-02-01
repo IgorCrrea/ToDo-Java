@@ -1,6 +1,7 @@
 package br.com.igorcrrea.todo.model;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,9 +15,9 @@ public class DAO {
 	public List<Tarefa> select() throws SQLException {
 		List<Tarefa> listaDeTarefas = new ArrayList<>();
 
-		Statement stm = instanciaConection();
-		stm.execute("SELECT ID, DESCRICAO, FEITO FROM TAREFA");
-		ResultSet rst = stm.getResultSet();
+		PreparedStatement pstm = instanciaConection("SELECT ID, DESCRICAO, FEITO FROM TAREFA");
+		pstm.execute();
+		ResultSet rst = pstm.getResultSet();
 
 		while (rst.next()) {
 			Integer id = rst.getInt("ID");
@@ -34,9 +35,11 @@ public class DAO {
 	public List<Tarefa> select(String campo, String valor) throws SQLException {
 		List<Tarefa> listaDeTarefas = new ArrayList<>();
 
-		Statement stm = instanciaConection();
-		stm.execute("SELECT * FROM TAREFA WHERE "+campo+"="+valor+"");
-		ResultSet rst = stm.getResultSet();
+		PreparedStatement pstm = instanciaConection("SELECT * FROM TAREFA WHERE ? = ?");
+		pstm.setString(1, campo);
+		pstm.setString(2, valor);
+		pstm.execute();
+		ResultSet rst = pstm.getResultSet();
 
 		while (rst.next()) {
 			Integer id = rst.getInt("ID");
@@ -52,9 +55,10 @@ public class DAO {
 	}
 
 	public void insert(String item) throws SQLException {
-		Statement stm = instanciaConection();
-		stm.execute("INSERT INTO TAREFA(DESCRICAO) VALUES ('" + item + "')", Statement.RETURN_GENERATED_KEYS);
-		ResultSet rst = stm.getGeneratedKeys();
+		PreparedStatement pstm = instanciaConectionComRetorno("INSERT INTO TAREFA(DESCRICAO) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+		pstm.setString(1, item);
+		pstm.execute();
+		ResultSet rst = pstm.getGeneratedKeys();
 
 		while (rst.next()) {
 			Integer id = rst.getInt(1);
@@ -65,26 +69,37 @@ public class DAO {
 	}
 
 	public void remove(Integer id) throws SQLException {
-		Statement stm = instanciaConection();
-		stm.execute("DELETE FROM TAREFA WHERE ID = " + id + "");
+		PreparedStatement pstm = instanciaConection("DELETE FROM TAREFA WHERE ID = ?");
+		pstm.setInt(1, id);
+		pstm.execute();
 
-		System.out.println("Quantidade de linhas modificadas: " + stm.getUpdateCount());
+		System.out.println("Quantidade de linhas modificadas: " + pstm.getUpdateCount());
 		this.con.close();
 	}
 
 	public void update(Integer id, String descricao) throws SQLException {
-		Statement stm = instanciaConection();
-		stm.execute("UPDATE TAREFA SET DESCRICAO = '" + descricao + "' WHERE ID=" + id + "");
+		PreparedStatement pstm = instanciaConection("UPDATE TAREFA SET DESCRICAO = ? WHERE ID=?");
+		pstm.setInt(1, id);
+		pstm.setString(2, descricao);
+		pstm.execute();
 
 		this.con.close();
 	}
 
-	private Statement instanciaConection() throws SQLException {
+	private PreparedStatement instanciaConection(String sql) throws SQLException {
 		ConnectionFactory conFactory = new ConnectionFactory();
 		con = conFactory.conecta();
-		Statement stm = con.createStatement();
+		PreparedStatement pstm = con.prepareStatement(sql);
 
-		return stm;
+		return pstm;
 	}
+	
+	private PreparedStatement instanciaConectionComRetorno(String sql, Integer retorno) throws SQLException {
+		ConnectionFactory conFactory = new ConnectionFactory();
+		con = conFactory.conecta();
+		PreparedStatement pstm = con.prepareStatement(sql, retorno);
 
+		return pstm;
+	}
+	
 }
