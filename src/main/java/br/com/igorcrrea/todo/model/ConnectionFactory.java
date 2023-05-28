@@ -18,7 +18,7 @@ public class ConnectionFactory {
 	public Connection conecta() throws SQLException {
 		
 		Connection conexao = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/todo_list?useTimezone=true&serverTimezone=UTC", "root", "Igor1101");
+					"jdbc:mysql://localhost:3306/todo_list?useTimezone=true&serverTimezone=UTC", "root", "suaSenha");
 			return conexao;
 		
 	}
